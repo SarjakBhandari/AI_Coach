@@ -1,29 +1,23 @@
 import logging
 from fastapi import FastAPI
-from app.routers import auth_routes
-from models.user import create_tables
+from models.user import User
+from models.feedback import Feedback
+from database.db import engine, Base
+from app.routers.auth_routes import auth_router
 
-# Setup terminal logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(message)s",
-    handlers=[logging.StreamHandler()]
-)
+
+logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
-logging.info("🚀 Basketball AI Backend booting up")
+app.include_router(auth_router)
 
-try:
-    create_tables()
-    logging.info("✅ Database tables initialized")
-except Exception as e:
-    logging.error(f"❌ DB initialization failed: {e}")
 
-app.include_router(auth_routes.router)
-logging.info("📦 Auth routes mounted")
+@app.on_event("startup")
+def startup():
+    logging.info("📦 Creating MySQL tables...")
+    Base.metadata.create_all(bind=engine)
 
 @app.get("/")
-def root():
-    print("🔍 Root endpoint accessed")
+def health():
     logging.info("🔍 Root endpoint accessed")
-    return {"msg": "Basketball AI Backend is Live"}
+    return {"msg": "Basketball AI backend is running"}
