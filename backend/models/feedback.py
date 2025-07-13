@@ -9,3 +9,7 @@ class Feedback(Base):
     knee_angle = Column(Float)
     shot_type = Column(String(50))
     feedback_text = Column(String(255))
+
+def create_tables():
+    from database.db import engine
+    Base.metadata.create_all(bind=engine)

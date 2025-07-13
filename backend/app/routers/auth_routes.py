@@ -13,6 +13,7 @@ def get_db():
     finally:
         db.close()
 
+
 @auth_router.post("/register")
 def register(username: str, email: str, password: str, db: Session = Depends(get_db)):
     if db.query(User).filter(User.username == username).first():
