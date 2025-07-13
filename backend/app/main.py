@@ -6,6 +6,8 @@ from database.db import Base, engine
 from app.routers.auth_routes import auth_router
 from app.routers.feedback_routes import feedback_router
 from app.routers.user_routes import user_router
+from app.routers.analyze_routes import analyze_router
+
 
 
 
@@ -20,7 +22,7 @@ def startup():
 
 app.include_router(auth_router)
 app.include_router(feedback_router)
-
+app.include_router(analyze_router)
 app.include_router(auth_router)
 app.include_router(feedback_router)
 app.include_router(user_router)
