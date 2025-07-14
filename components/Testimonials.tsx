@@ -2,25 +2,25 @@
 
 import { motion } from "framer-motion"
 import { Star, Quote } from "lucide-react"
-import StarField from "./StarField" // Import StarField
+import StarField from "./StarField"
 
 const testimonials = [
   {
-    name: "Anisha Sah", // Updated name
+    name: "Anisha Sah",
     role: "High School Player",
-    image: "/placeholder.svg?height=100&width=100",
+    image: "/images/anisha-sah.png",
     rating: 5,
     text: "AI Coach completely transformed my shooting. I went from 45% to 78% free throw accuracy in just 3 months. The real-time feedback is incredible!",
   },
   {
-    name: "Rabindra Bhattarai", // Updated name
+    name: "Rabindra Bhattarai",
     role: "College Basketball Coach",
     image: "/placeholder.svg?height=100&width=100",
     rating: 5,
     text: "As a coach, AI Coach gives me detailed analytics on each player's performance. It's like having an assistant coach that never sleeps.",
   },
   {
-    name: "Sarjak Bhattarai", // Updated name
+    name: "Sarjak Bhattarai",
     role: "Professional Player",
     image: "/placeholder.svg?height=100&width=100",
     rating: 5,
@@ -31,7 +31,7 @@ const testimonials = [
 export default function Testimonials() {
   return (
     <section id="feedback" className="relative py-24 bg-gradient-to-b from-dark-900 to-black overflow-hidden">
-      <StarField /> {/* Added StarField */}
+      <StarField />
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_70%)]" />

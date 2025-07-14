@@ -28,19 +28,19 @@ const features = [
     icon: Users,
     title: "Team Collaboration",
     description: "Share progress with coaches and teammates. Compare stats and challenge friends to improve together.",
-    image: "/placeholder.svg?height=300&width=400",
+    image: "/images/team-collaboration.png",
   },
   {
     icon: Zap,
     title: "Instant Feedback",
     description: "Get immediate coaching tips and corrections after every shot to accelerate your learning.",
-    image: "/placeholder.svg?height=300&width=400",
+    image: "/images/instant-feedback.png",
   },
   {
     icon: Shield,
     title: "Injury Prevention",
     description: "AI monitors your form to identify potential injury risks and suggests safer shooting techniques.",
-    image: "/placeholder.svg?height=300&width=400",
+    image: "/images/injury-prevention.png",
   },
 ]
 
