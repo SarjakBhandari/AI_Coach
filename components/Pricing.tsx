@@ -3,7 +3,7 @@
 import { motion } from "framer-motion"
 import { Check, Star, Zap } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import StarField from "./StarField" // Import StarField
+import StarField from "./StarField"
 
 const plans = [
   {
@@ -61,32 +61,13 @@ const plans = [
 export default function Pricing() {
   return (
     <section id="pricing" className="relative py-24 bg-gradient-to-b from-black to-dark-900 overflow-hidden">
-      <StarField /> {/* Added StarField */}
+      <StarField />
       {/* Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center mb-20"
-        >
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Choose Your{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-blue-300">
-              Training Plan
-            </span>
-          </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Start free and upgrade as you progress. All plans include our core AI coaching features.
-          </p>
-        </motion.div>
-
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto">
           {plans.map((plan, index) => (
