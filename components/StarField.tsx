@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useRef, useEffect, useState, useCallback } from "react"
+import { useRef, useEffect, useCallback } from "react"
 
 interface Star {
   x: number
@@ -14,8 +14,43 @@ interface Star {
 
 const StarField: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [stars, setStars] = useState<Star[]>([])
+  const starsRef = useRef<Star[]>([]) // Use useRef for mutable stars data
   const animationFrameId = useRef<number | null>(null)
+
+  const drawStar = useCallback(
+    (
+      ctx: CanvasRenderingContext2D,
+      cx: number,
+      cy: number,
+      spikes: number,
+      outerRadius: number,
+      innerRadius: number,
+      rotation: number,
+    ) => {
+      let rot = (Math.PI / 2) * 3 + rotation
+      let x = cx
+      let y = cy
+      const step = Math.PI / spikes
+
+      ctx.beginPath()
+      ctx.moveTo(cx, cy - outerRadius)
+      for (let i = 0; i < spikes; i++) {
+        x = cx + Math.cos(rot) * outerRadius
+        y = cy + Math.sin(rot) * outerRadius
+        ctx.lineTo(x, y)
+        rot += step
+
+        x = cx + Math.cos(rot) * innerRadius
+        y = cy + Math.sin(rot) * innerRadius
+        ctx.lineTo(x, y)
+        rot += step
+      }
+      ctx.lineTo(cx, cy - outerRadius)
+      ctx.closePath()
+      ctx.fill()
+    },
+    [],
+  )
 
   const createStars = useCallback(() => {
     const newStars: Star[] = []
@@ -69,41 +104,8 @@ const StarField: React.FC = () => {
         rotation: Math.random() * Math.PI * 2,
       })
     }
-
-    setStars(newStars)
+    starsRef.current = newStars // Assign to ref
   }, [])
-
-  const drawStar = (
-    ctx: CanvasRenderingContext2D,
-    cx: number,
-    cy: number,
-    spikes: number,
-    outerRadius: number,
-    innerRadius: number,
-    rotation: number,
-  ) => {
-    let rot = (Math.PI / 2) * 3 + rotation
-    let x = cx
-    let y = cy
-    const step = Math.PI / spikes
-
-    ctx.beginPath()
-    ctx.moveTo(cx, cy - outerRadius)
-    for (let i = 0; i < spikes; i++) {
-      x = cx + Math.cos(rot) * outerRadius
-      y = cy + Math.sin(rot) * outerRadius
-      ctx.lineTo(x, y)
-      rot += step
-
-      x = cx + Math.cos(rot) * innerRadius
-      y = cy + Math.sin(rot) * innerRadius
-      ctx.lineTo(x, y)
-      rot += step
-    }
-    ctx.lineTo(cx, cy - outerRadius)
-    ctx.closePath()
-    ctx.fill()
-  }
 
   const animate = useCallback(() => {
     const canvas = canvasRef.current
@@ -117,7 +119,8 @@ const StarField: React.FC = () => {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-    stars.forEach((star) => {
+    starsRef.current.forEach((star) => {
+      // Access stars from ref
       star.alpha += Math.random() * 0.005 * (Math.random() > 0.5 ? 1 : -1)
       if (star.alpha > 1) star.alpha = 1
       if (star.alpha < 0.1) star.alpha = 0.1
@@ -145,11 +148,11 @@ const StarField: React.FC = () => {
     })
 
     animationFrameId.current = requestAnimationFrame(animate)
-  }, [stars])
+  }, [drawStar]) // Only drawStar is a dependency now
 
   useEffect(() => {
-    createStars()
-    animationFrameId.current = requestAnimationFrame(animate)
+    createStars() // Initialize stars
+    animationFrameId.current = requestAnimationFrame(animate) // Start animation loop
 
     const handleResize = () => {
       const canvas = canvasRef.current
@@ -167,7 +170,7 @@ const StarField: React.FC = () => {
       }
       window.removeEventListener("resize", handleResize)
     }
-  }, [animate, createStars])
+  }, [animate, createStars]) // Dependencies for initial setup and resize
 
   return (
     <canvas
