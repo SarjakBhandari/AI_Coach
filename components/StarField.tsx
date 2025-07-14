@@ -3,108 +3,34 @@
 import type React from "react"
 import { useRef, useEffect, useCallback } from "react"
 
-interface Star {
-  x: number
-  y: number
-  size: number
-  alpha: number
-  type: "circle" | "star"
-  rotation?: number
-}
-
 const StarField: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const starsRef = useRef<Star[]>([]) // Use useRef for mutable stars data
   const animationFrameId = useRef<number | null>(null)
+  const stars = useRef<
+    {
+      x: number
+      y: number
+      z: number
+      size: number
+      speed: number
+      color: string
+    }[]
+  >([])
 
-  const drawStar = useCallback(
-    (
-      ctx: CanvasRenderingContext2D,
-      cx: number,
-      cy: number,
-      spikes: number,
-      outerRadius: number,
-      innerRadius: number,
-      rotation: number,
-    ) => {
-      let rot = (Math.PI / 2) * 3 + rotation
-      let x = cx
-      let y = cy
-      const step = Math.PI / spikes
-
-      ctx.beginPath()
-      ctx.moveTo(cx, cy - outerRadius)
-      for (let i = 0; i < spikes; i++) {
-        x = cx + Math.cos(rot) * outerRadius
-        y = cy + Math.sin(rot) * outerRadius
-        ctx.lineTo(x, y)
-        rot += step
-
-        x = cx + Math.cos(rot) * innerRadius
-        y = cy + Math.sin(rot) * innerRadius
-        ctx.lineTo(x, y)
-        rot += step
-      }
-      ctx.lineTo(cx, cy - outerRadius)
-      ctx.closePath()
-      ctx.fill()
-    },
-    [],
-  )
-
-  const createStars = useCallback(() => {
-    const newStars: Star[] = []
-    const numSmallCircles = 80
-    const numMediumStars = 15
-    const numLargeCircles = 5
-    const numExtraLargeStars = 5
-
-    // Small circles
-    for (let i = 0; i < numSmallCircles; i++) {
+  const initStars = useCallback(() => {
+    const numStars = 500
+    const newStars = []
+    for (let i = 0; i < numStars; i++) {
       newStars.push({
-        x: Math.random(),
-        y: Math.random(),
-        size: Math.random() * 1.5 + 0.5,
-        alpha: Math.random() * 0.5 + 0.3,
-        type: "circle",
+        x: Math.random() * 2 - 1, // -1 to 1
+        y: Math.random() * 2 - 1, // -1 to 1
+        z: Math.random(), // 0 to 1
+        size: Math.random() * 2 + 0.5,
+        speed: Math.random() * 0.005 + 0.001,
+        color: `rgba(255, 255, 255, ${Math.random() * 0.8 + 0.2})`,
       })
     }
-
-    // Medium stars
-    for (let i = 0; i < numMediumStars; i++) {
-      newStars.push({
-        x: Math.random(),
-        y: Math.random(),
-        size: Math.random() * 2 + 1.5,
-        alpha: Math.random() * 0.6 + 0.4,
-        type: "star",
-        rotation: Math.random() * Math.PI * 2,
-      })
-    }
-
-    // Large circles
-    for (let i = 0; i < numLargeCircles; i++) {
-      newStars.push({
-        x: Math.random(),
-        y: Math.random(),
-        size: Math.random() * 2.5 + 1.5,
-        alpha: Math.random() * 0.7 + 0.5,
-        type: "circle",
-      })
-    }
-
-    // Extra large stars
-    for (let i = 0; i < numExtraLargeStars; i++) {
-      newStars.push({
-        x: Math.random(),
-        y: Math.random(),
-        size: Math.random() * 3 + 2.5,
-        alpha: Math.random() * 0.8 + 0.6,
-        type: "star",
-        rotation: Math.random() * Math.PI * 2,
-      })
-    }
-    starsRef.current = newStars // Assign to ref
+    stars.current = newStars
   }, [])
 
   const animate = useCallback(() => {
@@ -118,41 +44,33 @@ const StarField: React.FC = () => {
     canvas.height = window.innerHeight
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
+    ctx.fillStyle = "black"
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-    starsRef.current.forEach((star) => {
-      // Access stars from ref
-      star.alpha += Math.random() * 0.005 * (Math.random() > 0.5 ? 1 : -1)
-      if (star.alpha > 1) star.alpha = 1
-      if (star.alpha < 0.1) star.alpha = 0.1
-
-      ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`
-
-      if (star.type === "circle") {
-        ctx.beginPath()
-        ctx.arc(star.x * canvas.width, star.y * canvas.height, star.size, 0, Math.PI * 2)
-        ctx.fill()
-      } else {
-        // Draw a 5-pointed star
-        const outerRadius = star.size * 2
-        const innerRadius = star.size
-        drawStar(ctx, star.x * canvas.width, star.y * canvas.height, 5, outerRadius, innerRadius, star.rotation || 0)
-
-        // Add a subtle glow for larger stars
-        if (star.size > 2) {
-          ctx.shadowBlur = star.size * 2
-          ctx.shadowColor = `rgba(173, 216, 230, ${star.alpha * 0.8})` // Light blue glow
-          ctx.fill() // Redraw to apply shadow
-          ctx.shadowBlur = 0 // Reset shadow
-        }
+    stars.current.forEach((star) => {
+      star.z -= star.speed
+      if (star.z <= 0) {
+        star.z = 1 // Reset star to the back
+        star.x = Math.random() * 2 - 1
+        star.y = Math.random() * 2 - 1
       }
+
+      const x = star.x * (canvas.width / 2) * (1 / star.z) + canvas.width / 2
+      const y = star.y * (canvas.height / 2) * (1 / star.z) + canvas.height / 2
+      const size = star.size * (1 / star.z)
+
+      ctx.beginPath()
+      ctx.arc(x, y, size, 0, Math.PI * 2)
+      ctx.fillStyle = star.color
+      ctx.fill()
     })
 
     animationFrameId.current = requestAnimationFrame(animate)
-  }, [drawStar]) // Only drawStar is a dependency now
+  }, [])
 
   useEffect(() => {
-    createStars() // Initialize stars
-    animationFrameId.current = requestAnimationFrame(animate) // Start animation loop
+    initStars()
+    animationFrameId.current = requestAnimationFrame(animate)
 
     const handleResize = () => {
       const canvas = canvasRef.current
@@ -170,13 +88,13 @@ const StarField: React.FC = () => {
       }
       window.removeEventListener("resize", handleResize)
     }
-  }, [animate, createStars]) // Dependencies for initial setup and resize
+  }, [initStars, animate])
 
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none z-0"
-      style={{ background: "transparent" }}
+      className="absolute inset-0 z-0"
+      style={{ background: "linear-gradient(to bottom, #000000, #1a1a2e)" }}
     />
   )
 }

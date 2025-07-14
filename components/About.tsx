@@ -1,64 +1,85 @@
-import type React from "react"
-import Image from "next/image"
+"use client"
+
+import { motion } from "framer-motion"
+import { Users, Award, Globe } from "lucide-react"
+import StarField from "./StarField" // Import StarField
+import Image from "next/image" // Import Next.js Image component
 
 export default function About() {
   return (
-    <section id="about" className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-gray-900 to-black text-white">
-      <div className="container px-4 md:px-6">
-        <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center">
-          <div className="relative h-[400px] w-full overflow-hidden rounded-xl shadow-lg">
+    <section id="about" className="relative py-24 bg-gradient-to-b from-black to-dark-900 overflow-hidden">
+      <StarField /> {/* Added StarField */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="text-center mb-20"
+        >
+          <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
+            About{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-blue-300">
+              AI Coach
+            </span>
+          </h2>
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            Our mission is to revolutionize basketball training through cutting-edge AI technology.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
             <Image
-              src="/placeholder.svg"
-              alt="AI Coach"
-              layout="fill"
-              objectFit="cover"
-              className="transition-transform duration-500 hover:scale-105"
+              src="/images/about-ai-coach.png"
+              alt="About AI Coach"
+              width={600}
+              height={400}
+              className="rounded-xl shadow-lg border border-primary-500/20"
             />
-          </div>
-          <div className="space-y-6">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              Revolutionize Your Basketball Training with AI
-            </h2>
-            <p className="max-w-[600px] text-gray-300 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Our AI-powered basketball training platform provides personalized coaching, real-time feedback, and
-              data-driven insights to help you unlock your full potential on the court.
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="space-y-8 text-gray-300 text-lg"
+          >
+            <p>
+              AI Coach was founded by a team of basketball enthusiasts and AI experts with a shared vision: to make
+              elite-level coaching accessible to everyone. We believe that technology can unlock new potentials in
+              athletic performance.
             </p>
-            <ul className="grid gap-4 text-gray-300">
-              <li className="flex items-center gap-2">
-                <CheckIcon className="h-5 w-5 text-primary-400" />
-                Personalized training plans tailored to your unique needs.
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckIcon className="h-5 w-5 text-primary-400" />
-                Real-time feedback on your form, technique, and performance.
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckIcon className="h-5 w-5 text-primary-400" />
-                Advanced analytics to track your progress and identify areas for improvement.
-              </li>
-            </ul>
-          </div>
+            <p>
+              Our platform uses advanced computer vision and machine learning algorithms to provide real-time feedback
+              and personalized training plans. Whether you're a beginner or a seasoned pro, AI Coach is designed to help
+              you refine your skills, prevent injuries, and achieve your basketball dreams.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4">
+              <div className="flex flex-col items-center text-center">
+                <Users className="h-10 w-10 text-primary-400 mb-3" />
+                <h4 className="font-semibold text-white text-xl">Community Focused</h4>
+                <p className="text-sm">Building a global network of passionate players.</p>
+              </div>
+              <div className="flex flex-col items-center text-center">
+                <Award className="h-10 w-10 text-primary-400 mb-3" />
+                <h4 className="font-semibold text-white text-xl">Excellence Driven</h4>
+                <p className="text-sm">Committed to delivering the best training experience.</p>
+              </div>
+              <div className="flex flex-col items-center text-center">
+                <Globe className="h-10 w-10 text-primary-400 mb-3" />
+                <h4 className="font-semibold text-white text-xl">Global Reach</h4>
+                <p className="text-sm">Empowering athletes worldwide.</p>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
-  )
-}
-
-function CheckIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
   )
 }
