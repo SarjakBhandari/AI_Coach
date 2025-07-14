@@ -1,22 +1,21 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { ChevronUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ArrowUp } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 
 export default function ScrollToTopButton() {
   const [isVisible, setIsVisible] = useState(false)
 
-  // Show button when page is scrolled down
   const toggleVisibility = () => {
-    if (window.pageYOffset > 300) {
+    if (window.scrollY > 300) {
       setIsVisible(true)
     } else {
       setIsVisible(false)
     }
   }
 
-  // Scroll to top when button is clicked
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -32,16 +31,25 @@ export default function ScrollToTopButton() {
   }, [])
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <AnimatePresence>
       {isVisible && (
-        <Button
-          onClick={scrollToTop}
-          className="bg-primary-600 hover:bg-primary-700 text-white p-3 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110"
-          aria-label="Scroll to top"
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.3 }}
+          className="fixed bottom-8 right-8 z-50"
         >
-          <ChevronUp className="h-6 w-6" />
-        </Button>
+          <Button
+            size="icon"
+            onClick={scrollToTop}
+            className="rounded-full h-14 w-14 bg-primary-500 hover:bg-primary-600 transition-colors duration-300 shadow-lg"
+            aria-label="Scroll to top"
+          >
+            <ArrowUp className="h-7 w-7 text-white" />
+          </Button>
+        </motion.div>
       )}
-    </div>
+    </AnimatePresence>
   )
 }

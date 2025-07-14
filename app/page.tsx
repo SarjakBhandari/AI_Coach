@@ -1,27 +1,27 @@
-import Header from "@/components/Header"
 import Hero from "@/components/Hero"
 import Features from "@/components/Features"
 import HowItWorks from "@/components/HowItWorks"
-import Services from "@/components/Services" // Import new component
-import About from "@/components/About" // Import new component
 import Testimonials from "@/components/Testimonials"
 import Pricing from "@/components/Pricing"
 import CallToAction from "@/components/CallToAction"
 import Footer from "@/components/Footer"
+import Header from "@/components/Header"
+import ScrollToTopButton from "@/components/ScrollToTopButton"
 
 export default function Home() {
   return (
-    <main className="bg-black min-h-screen">
+    <div className="flex flex-col min-h-screen bg-black">
       <Header />
-      <Hero />
-      <Features />
-      <HowItWorks />
-      <Services /> {/* Added Services section */}
-      <About /> {/* Added About section */}
-      <Testimonials />
-      <Pricing />
-      <CallToAction />
+      <main className="flex-grow">
+        <Hero />
+        <Features />
+        <HowItWorks />
+        <Testimonials />
+        <Pricing />
+        <CallToAction />
+      </main>
       <Footer />
-    </main>
+      <ScrollToTopButton />
+    </div>
   )
 }

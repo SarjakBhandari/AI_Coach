@@ -1,55 +1,57 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Brain, Target, TrendingUp, Users, Zap, Shield } from "lucide-react"
-import StarField from "./StarField"
-
-const features = [
-  {
-    icon: Brain,
-    title: "AI-Powered Analysis",
-    description: "Advanced computer vision analyzes your shooting form, footwork, and technique in real-time.",
-    image: "/images/ai-powered-analysis.png",
-  },
-  {
-    icon: Target,
-    title: "Precision Tracking",
-    description:
-      "Track every shot with millimeter accuracy. Get detailed analytics on arc, release point, and follow-through.",
-    image: "/images/precision-tracking.png",
-  },
-  {
-    icon: TrendingUp,
-    title: "Performance Insights",
-    description: "Comprehensive performance metrics and progress tracking to monitor your improvement over time.",
-    image: "/images/performance-insights.png",
-  },
-  {
-    icon: Users,
-    title: "Team Collaboration",
-    description: "Share progress with coaches and teammates. Compare stats and challenge friends to improve together.",
-    image: "/images/team-collaboration.png",
-  },
-  {
-    icon: Zap,
-    title: "Instant Feedback",
-    description: "Get immediate coaching tips and corrections after every shot to accelerate your learning.",
-    image: "/images/instant-feedback.png",
-  },
-  {
-    icon: Shield,
-    title: "Injury Prevention",
-    description: "AI monitors your form to identify potential injury risks and suggests safer shooting techniques.",
-    image: "/images/injury-prevention.png",
-  },
-]
+import { Lightbulb, Target, Users, MessageSquare, Shield, TrendingUp } from "lucide-react"
+import Image from "next/image"
 
 export default function Features() {
+  const features = [
+    {
+      icon: Lightbulb,
+      title: "AI-Powered Analysis",
+      description:
+        "Leverage advanced AI to analyze your performance, identify strengths, and pinpoint areas for improvement.",
+      image: "/images/ai-powered-analysis.png",
+    },
+    {
+      icon: Target,
+      title: "Precision Tracking",
+      description: "Track every movement, shot, and drill with unparalleled accuracy, ensuring data-driven progress.",
+      image: "/images/precision-tracking.png",
+    },
+    {
+      icon: TrendingUp,
+      title: "Performance Insights",
+      description:
+        "Gain deep insights into your game with detailed reports and visual breakdowns of your training sessions.",
+      image: "/images/performance-insights.png",
+    },
+    {
+      icon: Users,
+      title: "Team Collaboration",
+      description:
+        "Share progress, challenge teammates, and collaborate on training plans within a dedicated team environment.",
+      image: "/images/team-collaboration.png",
+    },
+    {
+      icon: MessageSquare,
+      title: "Instant Feedback",
+      description:
+        "Receive real-time audio and visual feedback during your drills, correcting form and technique on the fly.",
+      image: "/images/instant-feedback.png",
+    },
+    {
+      icon: Shield,
+      title: "Injury Prevention",
+      description:
+        "Our AI monitors your movements to detect potential risks and provides recommendations to prevent injuries.",
+      image: "/images/injury-prevention.png",
+    },
+  ]
+
   return (
-    <section id="features" className="relative py-24 bg-gradient-to-b from-black to-dark-900 overflow-hidden">
-      <StarField />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
+    <section id="features" className="py-24 bg-gradient-to-b from-dark-900 to-black relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -58,49 +60,38 @@ export default function Features() {
           className="text-center mb-20"
         >
           <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Revolutionary{" "}
+            Unleash Your{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-blue-300">
-              Features
+              Potential
             </span>
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Experience the future of basketball training with cutting-edge AI technology that transforms how you learn
-            and improve your game.
+            Discover the powerful features that make AI Coach the ultimate training companion.
           </p>
         </motion.div>
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {features.map((feature, index) => (
             <motion.div
-              key={feature.title}
-              initial={{ opacity: 0, y: 30 }}
+              key={index}
+              initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="group"
+              className="bg-dark-800 rounded-xl p-8 border border-primary-500/20 shadow-lg flex flex-col items-center text-center"
             >
-              <div className="bg-dark-800/50 backdrop-blur-sm border border-primary-500/20 rounded-2xl p-8 h-full hover:border-primary-500/40 transition-all duration-300 hover:transform hover:scale-105">
-                {/* Feature Image */}
-                <div className="mb-6 overflow-hidden rounded-xl">
-                  <img
-                    src={feature.image || "/placeholder.svg"}
-                    alt={feature.title}
-                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
-                  />
-                </div>
-
-                {/* Feature Icon */}
-                <div className="mb-6">
-                  <div className="bg-primary-600/20 p-3 rounded-xl w-fit">
-                    <feature.icon className="h-8 w-8 text-primary-400" />
-                  </div>
-                </div>
-
-                {/* Feature Content */}
-                <h3 className="text-2xl font-bold text-white mb-4">{feature.title}</h3>
-                <p className="text-gray-300 leading-relaxed">{feature.description}</p>
+              <div className="mb-6">
+                <Image
+                  src={feature.image || "/placeholder.svg"}
+                  alt={feature.title}
+                  width={300}
+                  height={200}
+                  className="rounded-lg object-cover w-full h-48"
+                />
               </div>
+              <feature.icon className="h-12 w-12 text-primary-400 mb-4" />
+              <h3 className="text-2xl font-semibold text-white mb-3">{feature.title}</h3>
+              <p className="text-gray-300 text-lg">{feature.description}</p>
             </motion.div>
           ))}
         </div>

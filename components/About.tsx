@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { Users, Award, Globe } from "lucide-react"
 import StarField from "./StarField" // Import StarField
+import Image from "next/image" // Import Next.js Image component
 
 export default function About() {
   return (
@@ -34,9 +35,11 @@ export default function About() {
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <img
-              src="/placeholder.svg?height=400&width=600"
+            <Image
+              src="/images/about-ai-coach.png"
               alt="About AI Coach"
+              width={600}
+              height={400}
               className="rounded-xl shadow-lg border border-primary-500/20"
             />
           </motion.div>

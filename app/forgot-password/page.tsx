@@ -1,45 +1,87 @@
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+"use client"
+
+import type React from "react"
+
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
-import StarField from "@/components/StarField" // Import StarField
+import { motion } from "framer-motion"
 
 export default function ForgotPasswordPage() {
+  const [email, setEmail] = useState("")
+  const [message, setMessage] = useState("")
+  const [error, setError] = useState("")
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setMessage("")
+    setError("")
+
+    if (!email) {
+      setError("Please enter your email address.")
+      return
+    }
+
+    // Simulate API call
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1500)) // Simulate network delay
+      if (email === "test@example.com") {
+        setMessage("If an account with that email exists, a password reset link has been sent.")
+      } else {
+        setMessage("If an account with that email exists, a password reset link has been sent.")
+      }
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.")
+    }
+  }
+
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-black text-white p-4 overflow-hidden">
-      <StarField /> {/* Added StarField */}
-      <Card className="relative z-10 w-full max-w-md bg-dark-800/50 backdrop-blur-sm border border-primary-500/20">
-        <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold text-white">Forgot Password?</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <p className="text-gray-300 text-center">
-            Enter your email address below and we'll send you a link to reset your password.
-          </p>
-          <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium text-gray-300">
-              Email
-            </label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="m@example.com"
-              className="bg-dark-900 border-primary-500/30 text-white placeholder-gray-500"
-            />
-          </div>
-          <Button className="w-full bg-primary-600 hover:bg-primary-700 text-white shadow-lg shadow-primary-500/25">
-            Send Reset Link
-          </Button>
-        </CardContent>
-        <CardFooter className="flex flex-col gap-4 text-center">
-          <Link href="/login" className="text-sm text-primary-400 hover:underline">
-            Back to Log In
-          </Link>
-          <Link href="/" className="text-sm text-gray-400 hover:underline">
-            Back to Home
-          </Link>
-        </CardFooter>
-      </Card>
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-900 to-black p-4">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+        <Card className="w-full max-w-md bg-dark-800 text-white border-primary-500/20 shadow-lg">
+          <CardHeader className="text-center">
+            <CardTitle className="text-3xl font-bold text-primary-400">Forgot Password?</CardTitle>
+            <CardDescription className="text-gray-400">
+              Enter your email to receive a password reset link.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-gray-300">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="m.jordan@example.com"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="bg-dark-700 border-primary-500/30 text-white placeholder:text-gray-500 focus:border-primary-400"
+                />
+              </div>
+              {message && <p className="text-green-500 text-center">{message}</p>}
+              {error && <p className="text-red-500 text-center">{error}</p>}
+              <Button
+                type="submit"
+                className="w-full bg-gradient-to-r from-primary-500 to-blue-500 hover:from-primary-600 hover:to-blue-600 transition-colors duration-300"
+              >
+                Reset Password
+              </Button>
+            </form>
+            <div className="mt-6 text-center text-sm text-gray-400">
+              Remember your password?{" "}
+              <Link href="/login" className="font-medium text-primary-400 hover:underline">
+                Log In
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
     </div>
   )
 }
