@@ -22,7 +22,7 @@ const features = [
     icon: TrendingUp,
     title: "Performance Insights",
     description: "Comprehensive performance metrics and progress tracking to monitor your improvement over time.",
-    image: "/placeholder.svg?height=300&width=400",
+    image: "/images/performance-insights.png",
   },
   {
     icon: Users,

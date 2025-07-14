@@ -1,80 +1,75 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Check, Zap } from "lucide-react"
+import { Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import StarField from "./StarField"
+import { useRouter } from "next/navigation"
 
 const plans = [
   {
-    name: "Starter",
-    price: "Rs 0",
-    period: "",
-    description: "Perfect for beginners getting started",
+    name: "Basic",
+    price: "$29",
+    period: "/month",
+    description: "Perfect for individual players starting their AI training journey",
     features: [
-      "Basic shot tracking",
-      "Weekly progress reports",
-      "Community access",
+      "AI shot analysis",
+      "Basic performance metrics",
+      "5 video uploads per month",
+      "Email support",
       "Mobile app access",
-      "Basic analytics",
     ],
+    buttonText: "Start Basic Plan",
     popular: false,
-    cta: "Get Started",
   },
   {
     name: "Pro",
-    price: "Rs 1000",
+    price: "$79",
     period: "/month",
-    description: "For serious players ready to level up",
+    description: "Advanced features for serious players and coaches",
     features: [
-      "Advanced AI analysis",
-      "Real-time feedback",
-      "Detailed performance metrics",
-      "Video analysis",
-      "Custom training plans",
-      "Coach collaboration tools",
+      "Everything in Basic",
+      "Advanced biomechanics analysis",
+      "Unlimited video uploads",
+      "Team collaboration tools",
       "Priority support",
+      "Custom training programs",
+      "Performance comparisons",
     ],
+    buttonText: "Start Pro Plan",
     popular: true,
-    cta: "Start Pro Trial",
   },
   {
-    name: "Team",
-    price: "Rs 5000",
+    name: "Elite",
+    price: "$149",
     period: "/month",
-    description: "For teams and coaching staff",
+    description: "Professional-grade tools for teams and academies",
     features: [
       "Everything in Pro",
-      "Team management dashboard",
-      "Multi-player analytics",
-      "Advanced reporting",
-      "Custom branding",
+      "Multi-player analysis",
+      "Advanced team analytics",
       "API access",
-      "Dedicated support",
-      "Team competitions",
+      "White-label options",
+      "Dedicated account manager",
+      "Custom integrations",
+      "Live coaching sessions",
     ],
+    buttonText: "Start Elite Plan",
     popular: false,
-    cta: "Contact Sales",
   },
 ]
 
-const handlePlanClick = (planName: string) => {
-  // Navigate to payment section
-  const paymentSection = document.getElementById("payment")
-  if (paymentSection) {
-    paymentSection.scrollIntoView({ behavior: "smooth" })
-  }
-}
-
 export default function Pricing() {
+  const router = useRouter()
+
+  const handlePlanClick = () => {
+    router.push("/payment")
+  }
+
   return (
-    <section id="pricing" className="relative py-24 bg-gradient-to-b from-black to-dark-900 overflow-hidden">
+    <section id="pricing" className="relative py-24 bg-gradient-to-b from-dark-900 to-black overflow-hidden">
       <StarField />
-      {/* Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
-      </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <motion.div
@@ -91,7 +86,7 @@ export default function Pricing() {
             </span>
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Start free and upgrade as you progress. All plans include our core AI coaching features.
+            Select the perfect plan to elevate your basketball skills with AI-powered training and analysis.
           </p>
         </motion.div>
 
@@ -106,51 +101,49 @@ export default function Pricing() {
               viewport={{ once: true }}
               className="relative"
             >
-              <div
-                className={`bg-dark-800/50 backdrop-blur-sm border rounded-2xl p-8 h-full transition-all duration-300 hover:transform hover:scale-105 ${
-                  plan.popular
-                    ? "border-primary-500/50 shadow-2xl shadow-primary-500/20 z-10"
-                    : "border-primary-500/20 hover:border-primary-500/40"
+              <Card
+                className={`bg-dark-800/50 backdrop-blur-sm border-primary-500/20 hover:border-primary-500/40 transition-all duration-300 h-full ${
+                  plan.popular ? "ring-2 ring-primary-500/50 z-10" : ""
                 }`}
               >
-                {/* Plan Header */}
-                <div className="text-center mb-8">
+                <CardHeader className="text-center pb-8">
                   <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
-                  <p className="text-gray-400 mb-6">{plan.description}</p>
-                  <div className="flex items-baseline justify-center">
+                  <div className="mb-4">
                     <span className="text-5xl font-bold text-white">{plan.price}</span>
-                    <span className="text-gray-400 ml-1">{plan.period}</span>
+                    <span className="text-gray-400 text-lg">{plan.period}</span>
                   </div>
-                </div>
+                  <p className="text-gray-300">{plan.description}</p>
+                </CardHeader>
 
-                {/* Features List */}
-                <ul className="space-y-4 mb-8">
-                  {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-center">
-                      <Check className="h-5 w-5 text-primary-400 mr-3 flex-shrink-0" />
-                      <span className="text-gray-300">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
+                <CardContent className="space-y-6">
+                  {/* Features List */}
+                  <ul className="space-y-4">
+                    {plan.features.map((feature, featureIndex) => (
+                      <li key={featureIndex} className="flex items-center text-gray-300">
+                        <Check className="h-5 w-5 text-primary-400 mr-3 flex-shrink-0" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
 
-                {/* CTA Button */}
-                <Button
-                  onClick={() => handlePlanClick(plan.name)}
-                  className={`w-full py-3 text-lg font-semibold transition-all duration-300 ${
-                    plan.popular
-                      ? "bg-gradient-to-r from-primary-500 to-blue-500 hover:from-primary-600 hover:to-blue-600 text-white shadow-lg shadow-primary-500/25"
-                      : "bg-dark-700 hover:bg-dark-600 text-white border border-primary-500/30 hover:border-primary-500/50"
-                  }`}
-                >
-                  {plan.popular && <Zap className="h-5 w-5 mr-2" />}
-                  {plan.cta}
-                </Button>
-              </div>
+                  {/* CTA Button */}
+                  <Button
+                    onClick={handlePlanClick}
+                    className={`w-full py-3 text-lg font-semibold transition-all duration-300 ${
+                      plan.popular
+                        ? "bg-primary-600 hover:bg-primary-700 text-white"
+                        : "bg-dark-700 hover:bg-dark-600 text-white border border-primary-500/30 hover:border-primary-500/50"
+                    }`}
+                  >
+                    {plan.buttonText}
+                  </Button>
+                </CardContent>
+              </Card>
             </motion.div>
           ))}
         </div>
 
-        {/* Money Back Guarantee */}
+        {/* Bottom CTA */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -158,7 +151,12 @@ export default function Pricing() {
           viewport={{ once: true }}
           className="text-center mt-16"
         >
-          <p className="text-gray-400 text-lg">30-day money-back guarantee • Cancel anytime • No hidden fees</p>
+          <p className="text-gray-300 mb-6">All plans include a 14-day free trial. No credit card required.</p>
+          <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-400">
+            <span>✓ Cancel anytime</span>
+            <span>✓ 24/7 support</span>
+            <span>✓ Money-back guarantee</span>
+          </div>
         </motion.div>
       </div>
     </section>
