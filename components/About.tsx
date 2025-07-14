@@ -1,82 +1,76 @@
-"use client"
-
-import { motion } from "framer-motion"
-import { Users, Award, Globe } from "lucide-react"
-import StarField from "./StarField" // Import StarField
+import type React from "react"
+import Image from "next/image"
+import { Button } from "@/components/ui/button"
 
 export default function About() {
   return (
-    <section id="about" className="relative py-24 bg-gradient-to-b from-black to-dark-900 overflow-hidden">
-      <StarField /> {/* Added StarField */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center mb-20"
-        >
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            About{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-blue-300">
-              AI Coach
-            </span>
-          </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Our mission is to revolutionize basketball training through cutting-edge AI technology.
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <img
-              src="/placeholder.svg?height=400&width=600"
-              alt="About AI Coach"
-              className="rounded-xl shadow-lg border border-primary-500/20"
-            />
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            viewport={{ once: true }}
-            className="space-y-8 text-gray-300 text-lg"
-          >
-            <p>
-              AI Coach was founded by a team of basketball enthusiasts and AI experts with a shared vision: to make
-              elite-level coaching accessible to everyone. We believe that technology can unlock new potentials in
-              athletic performance.
-            </p>
-            <p>
-              Our platform uses advanced computer vision and machine learning algorithms to provide real-time feedback
-              and personalized training plans. Whether you're a beginner or a seasoned pro, AI Coach is designed to help
-              you refine your skills, prevent injuries, and achieve your basketball dreams.
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4">
-              <div className="flex flex-col items-center text-center">
-                <Users className="h-10 w-10 text-primary-400 mb-3" />
-                <h4 className="font-semibold text-white text-xl">Community Focused</h4>
-                <p className="text-sm">Building a global network of passionate players.</p>
+    <section id="about" className="w-full py-12 md:py-24 lg:py-32">
+      <div className="container px-4 md:px-6">
+        <div className="grid gap-6 lg:grid-cols-[1fr_500px] lg:gap-12 xl:grid-cols-[1fr_600px]">
+          <div className="flex flex-col justify-center space-y-4">
+            <div className="space-y-2">
+              <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm dark:bg-gray-800">
+                About AI Coach
               </div>
-              <div className="flex flex-col items-center text-center">
-                <Award className="h-10 w-10 text-primary-400 mb-3" />
-                <h4 className="font-semibold text-white text-xl">Excellence Driven</h4>
-                <p className="text-sm">Committed to delivering the best training experience.</p>
-              </div>
-              <div className="flex flex-col items-center text-center">
-                <Globe className="h-10 w-10 text-primary-400 mb-3" />
-                <h4 className="font-semibold text-white text-xl">Global Reach</h4>
-                <p className="text-sm">Empowering athletes worldwide.</p>
-              </div>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                Revolutionizing Basketball Training with AI
+              </h2>
+              <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
+                AI Coach leverages cutting-edge artificial intelligence to provide personalized training, real-time
+                feedback, and in-depth performance analysis for basketball players of all levels.
+              </p>
             </div>
-          </motion.div>
+            <ul className="grid gap-2 py-4">
+              <li>
+                <CheckIcon className="mr-2 inline-block h-4 w-4" />
+                Personalized training plans tailored to your needs.
+              </li>
+              <li>
+                <CheckIcon className="mr-2 inline-block h-4 w-4" />
+                Real-time feedback on your technique and performance.
+              </li>
+              <li>
+                <CheckIcon className="mr-2 inline-block h-4 w-4" />
+                In-depth analytics to track your progress and identify areas for improvement.
+              </li>
+            </ul>
+            <div className="flex flex-col gap-2 min-[400px]:flex-row">
+              <Button href="#" variant="default">
+                Learn More
+              </Button>
+              <Button href="#" variant="outline">
+                Sign Up
+              </Button>
+            </div>
+          </div>
+          <Image
+            alt="About AI Coach"
+            className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last"
+            height="310"
+            src="/placeholder.svg"
+            width="550"
+          />
         </div>
       </div>
     </section>
+  )
+}
+
+function CheckIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
   )
 }
