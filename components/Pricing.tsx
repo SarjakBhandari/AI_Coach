@@ -1,9 +1,9 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Check, Star, Zap } from "lucide-react"
+import { Check, Zap } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import StarField from "./StarField" // Import StarField
+import StarField from "./StarField"
 
 const plans = [
   {
@@ -58,10 +58,18 @@ const plans = [
   },
 ]
 
+const handlePlanClick = (planName: string) => {
+  // Navigate to payment section
+  const paymentSection = document.getElementById("payment")
+  if (paymentSection) {
+    paymentSection.scrollIntoView({ behavior: "smooth" })
+  }
+}
+
 export default function Pricing() {
   return (
     <section id="pricing" className="relative py-24 bg-gradient-to-b from-black to-dark-900 overflow-hidden">
-      <StarField /> {/* Added StarField */}
+      <StarField />
       {/* Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl" />
@@ -98,16 +106,6 @@ export default function Pricing() {
               viewport={{ once: true }}
               className="relative"
             >
-              {/* Popular Badge */}
-              {plan.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <div className="bg-gradient-to-r from-primary-500 to-blue-500 text-white px-6 py-2 rounded-full text-sm font-semibold flex items-center space-x-1">
-                    <Star className="h-4 w-4 fill-current" />
-                    <span>Most Popular</span>
-                  </div>
-                </div>
-              )}
-
               <div
                 className={`bg-dark-800/50 backdrop-blur-sm border rounded-2xl p-8 h-full transition-all duration-300 hover:transform hover:scale-105 ${
                   plan.popular
@@ -137,6 +135,7 @@ export default function Pricing() {
 
                 {/* CTA Button */}
                 <Button
+                  onClick={() => handlePlanClick(plan.name)}
                   className={`w-full py-3 text-lg font-semibold transition-all duration-300 ${
                     plan.popular
                       ? "bg-gradient-to-r from-primary-500 to-blue-500 hover:from-primary-600 hover:to-blue-600 text-white shadow-lg shadow-primary-500/25"

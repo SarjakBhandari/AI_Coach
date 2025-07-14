@@ -2,21 +2,21 @@
 
 import { motion } from "framer-motion"
 import { Brain, Target, TrendingUp, Users, Zap, Shield } from "lucide-react"
-import StarField from "./StarField" // Import StarField
+import StarField from "./StarField"
 
 const features = [
   {
     icon: Brain,
     title: "AI-Powered Analysis",
     description: "Advanced computer vision analyzes your shooting form, footwork, and technique in real-time.",
-    image: "/placeholder.svg?height=300&width=400",
+    image: "/images/ai-powered-analysis.png",
   },
   {
     icon: Target,
     title: "Precision Tracking",
     description:
       "Track every shot with millimeter accuracy. Get detailed analytics on arc, release point, and follow-through.",
-    image: "/placeholder.svg?height=300&width=400",
+    image: "/images/precision-tracking.png",
   },
   {
     icon: TrendingUp,
@@ -47,7 +47,7 @@ const features = [
 export default function Features() {
   return (
     <section id="features" className="relative py-24 bg-gradient-to-b from-black to-dark-900 overflow-hidden">
-      <StarField /> {/* Added StarField */}
+      <StarField />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <motion.div
