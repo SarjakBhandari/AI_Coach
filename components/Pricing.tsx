@@ -88,7 +88,7 @@ export default function Pricing() {
         </motion.div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto">
           {plans.map((plan, index) => (
             <motion.div
               key={plan.name}
@@ -96,7 +96,7 @@ export default function Pricing() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className={`relative ${plan.popular ? "scale-105" : ""}`}
+              className="relative"
             >
               {/* Popular Badge */}
               {plan.popular && (
@@ -111,7 +111,7 @@ export default function Pricing() {
               <div
                 className={`bg-dark-800/50 backdrop-blur-sm border rounded-2xl p-8 h-full transition-all duration-300 hover:transform hover:scale-105 ${
                   plan.popular
-                    ? "border-primary-500/50 shadow-2xl shadow-primary-500/20"
+                    ? "border-primary-500/50 shadow-2xl shadow-primary-500/20 z-10"
                     : "border-primary-500/20 hover:border-primary-500/40"
                 }`}
               >
