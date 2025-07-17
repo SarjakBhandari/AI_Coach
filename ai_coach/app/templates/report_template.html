@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Basketball Frame Report</title>
+  <style>
+    body { font-family: Arial; background: #f4f4f4; padding: 20px; }
+    .frame { background: white; padding: 15px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+    img { max-width: 400px; border-radius: 4px; }
+    .feedback { margin-top: 10px; font-size: 0.95em; }
+  </style>
+</head>
+<body>
+  <h1>🏀 Basketball Frame Analysis</h1>
+  {% for frame in frames %}
+    <div class="frame">
+      <h2>Frame {{ frame.frame_id }}</h2>
+      <img src="{{ frame.image }}" alt="Frame {{ frame.frame_id }}">
+      <div class="feedback">{{ frame.feedback }}</div>
+    </div>
+  {% endfor %}
+</body>
+</html>
