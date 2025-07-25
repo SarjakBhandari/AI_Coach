@@ -1,0 +1,118 @@
+/* RESET & BASE */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #0f1c3f, #1c2e59);
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+/* HEADER */
+header {
+  background: #0b122d;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 26px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.logo span {
+  color: #00fff7;
+}
+
+nav a {
+  color: #ffffff;
+  margin-left: 20px;
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.2s;
+}
+
+nav a:hover {
+  color: #00fff7;
+}
+
+/* UPLOAD SECTION */
+.upload-section {
+  max-width: 700px;
+  margin: 80px auto;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(0, 255, 247, 0.1);
+  text-align: center;
+  backdrop-filter: blur(6px);
+}
+
+.upload-section h1 {
+  font-size: 32px;
+  margin-bottom: 20px;
+  color: #00fff7;
+}
+
+.upload-section p {
+  font-size: 16px;
+  color: #e0f7fa;
+  margin-bottom: 30px;
+}
+
+.upload-section input[type="file"] {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background-color: #ffffff;
+  color: #001f3f;
+  font-weight: 500;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.upload-section button {
+  background-color: #00fff7;
+  color: #001f3f;
+  padding: 12px 30px;
+  border: none;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.upload-section button:hover {
+  background-color: #ff4136;
+  color: white;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #0b122d;
+  color: #aaa;
+  font-size: 14px;
+}
+.flash-messages {
+  margin-bottom: 20px;
+  padding: 12px 20px;
+  background-color: rgba(0, 255, 247, 0.2);
+  border-radius: 8px;
+  color: #00fff7;
+  font-weight: 600;
+  text-align: center;
+}
+.features h2 {
+  font-size: 32px;
+  margin-bottom: 20px;
+  color: #00ffff;
+}
