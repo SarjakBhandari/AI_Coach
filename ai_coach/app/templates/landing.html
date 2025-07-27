@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Coach — Basketball Shot Analyzer</title>
+
+    <!-- Google Fonts: Montserrat & Poppins -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* Reset & base */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #121212;
+        color: #fff;
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      /* Navbar */
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.25rem 2rem;
+        background: #1e1e1e;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .logo {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 1.8rem;
+        color: #ff5722; /* vibrant orange */
+        letter-spacing: 2px;
+      }
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+      .nav-links a {
+        font-weight: 600;
+        padding: 0.25rem 0.5rem;
+        transition: color 0.3s ease;
+        font-size: 1rem;
+      }
+      .nav-links a:hover {
+        color: #ff8a50;
+      }
+      .btn-login,
+      .btn-register {
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        transition: background 0.3s ease, color 0.3s ease;
+        cursor: pointer;
+        border: 2px solid #ff5722;
+      }
+      .btn-login {
+        background: transparent;
+        color: #ff5722;
+        margin-right: 1rem;
+      }
+      .btn-login:hover {
+        background: #ff5722;
+        color: #121212;
+      }
+      .btn-register {
+        background: #ff5722;
+        color: #121212;
+        border: none;
+      }
+      .btn-register:hover {
+        background: #ff8a50;
+      }
+
+      /* Hero Section */
+      .hero {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 6rem 2rem 4rem;
+        background: linear-gradient(135deg, #1f1f1f 30%, #2e2e2e 100%);
+        position: relative;
+        overflow: hidden;
+      }
+      .hero h1 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 3rem;
+        max-width: 720px;
+        color: #ff5722;
+        margin-bottom: 1rem;
+        letter-spacing: 1.5px;
+      }
+      .hero p {
+        font-size: 1.25rem;
+        max-width: 520px;
+        color: #ddd;
+        margin-bottom: 2rem;
+      }
+      .btn-cta {
+        background: #ff5722;
+        padding: 1rem 3rem;
+        font-size: 1.25rem;
+        border-radius: 50px;
+        font-weight: 700;
+        color: #121212;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 6px 10px rgba(255, 87, 34, 0.5);
+        transition: background 0.3s ease, transform 0.2s ease;
+      }
+      .btn-cta:hover {
+        background: #ff8a50;
+        transform: scale(1.05);
+      }
+
+      /* Hero image - basketball silhouette */
+      .hero-visual {
+        margin-top: 3rem;
+        width: 300px;
+        max-width: 80vw;
+        filter: drop-shadow(0 0 8px #ff5722);
+        animation: float 6s ease-in-out infinite;
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-15px);
+        }
+      }
+
+      /* Features Section */
+      .features {
+        background: #1b1b1b;
+        padding: 4rem 2rem;
+        text-align: center;
+      }
+      .features h2 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+        color: #ff5722;
+      }
+      .feature-list {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 2.5rem;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .feature {
+        background: #2a2a2a;
+        padding: 2rem;
+        border-radius: 15px;
+        width: 260px;
+        box-shadow: 0 0 10px rgba(255, 87, 34, 0.3);
+        transition: transform 0.3s ease;
+      }
+      .feature:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 0 20px rgba(255, 87, 34, 0.7);
+      }
+      .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: #ff5722;
+      }
+      .feature-title {
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        font-size: 1.25rem;
+        color: #fff;
+      }
+      .feature-desc {
+        color: #ccc;
+        font-size: 1rem;
+        line-height: 1.4;
+      }
+
+      /* Testimonials Section */
+      .testimonials {
+        background: #121212;
+        padding: 4rem 2rem;
+        text-align: center;
+      }
+      .testimonials h2 {
+        font-family: "Montserrat", sans-serif;
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+        color: #ff5722;
+      }
+      .testimonial-cards {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .testimonial {
+        background: #1f1f1f;
+        padding: 2rem;
+        border-radius: 12px;
+        width: 280px;
+        box-shadow: 0 0 15px rgba(255, 87, 34, 0.4);
+        font-style: italic;
+        color: #ddd;
+        position: relative;
+      }
+      .testimonial::before {
+        content: "“";
+        font-size: 3rem;
+        color: #ff5722;
+        position: absolute;
+        top: 15px;
+        left: 15px;
+      }
+      .testimonial-author {
+        margin-top: 1.25rem;
+        font-weight: 700;
+        color: #ff8a50;
+      }
+
+      /* Footer */
+      footer {
+        background: #1e1e1e;
+        padding: 2rem 1rem;
+        text-align: center;
+        color: #888;
+        font-size: 0.9rem;
+      }
+      .social-links {
+        margin-bottom: 1rem;
+      }
+      .social-links a {
+        margin: 0 0.75rem;
+        color: #ff5722;
+        font-size: 1.4rem;
+        transition: color 0.3s ease;
+      }
+      .social-links a:hover {
+        color: #ff8a50;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .hero {
+          padding: 4rem 1rem 3rem;
+        }
+        .hero h1 {
+          font-size: 2.2rem;
+        }
+        .feature-list {
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+        .testimonial-cards {
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+        nav {
+          flex-wrap: wrap;
+          gap: 1rem;
+        }
+      }
+    </style>
+
+    <!-- FontAwesome for icons -->
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav>
+      <div class="logo">AI Coach</div>
+      <div class="nav-links">
+        <a href="{{ url_for('frame_bp.landing') }}">Home</a>
+        <a href="#features">Features</a>
+        <a href="{{ url_for('user_bp.login') }}" class="btn-login">Login</a>
+        <a href="{{ url_for('user_bp.register') }}" class="btn-register"
+          >Register</a
+        >
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+      <h1>Master Your Basketball Shot with AI</h1>
+      <p>
+        AI analyzes your shot technique and gives instant feedback to help you
+        improve faster.
+      </p>
+      <button
+        class="btn-cta"
+        onclick="location.href='{{ url_for('frame_bp.upload_video') }}'"
+      >
+        Try Now
+      </button>
+      <img
+        src="{{ url_for('static', filename='images/basketball_silhouette.svg') }}"
+        alt="Basketball AI Coach"
+        class="hero-visual"
+      />
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+      <h2>Features</h2>
+      <div class="feature-list">
+        <div class="feature">
+          <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+          <div class="feature-title">Real-time Analysis</div>
+          <div class="feature-desc">
+            Get instant feedback on your shot mechanics during practice.
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><i class="fas fa-user-cog"></i></div>
+          <div class="feature-title">Personalized Tips</div>
+          <div class="feature-desc">
+            Receive custom advice based on your shooting style and progress.
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><i class="fas fa-video"></i></div>
+          <div class="feature-title">Video Upload</div>
+          <div class="feature-desc">
+            Upload your game footage to analyze your performance anytime.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials" id="testimonials">
+      <h2>What Our Users Say</h2>
+      <div class="testimonial-cards">
+        <div class="testimonial">
+          This app helped me improve my 3-point shooting by analyzing every shot
+          and giving actionable tips.
+          <div class="testimonial-author">— Jordan, Amateur Player</div>
+        </div>
+        <div class="testimonial">
+          I love how easy it is to use and how accurate the feedback is. It’s
+          like having a personal coach on my phone.
+          <div class="testimonial-author">— Alex, College Athlete</div>
+        </div>
+        <div class="testimonial">
+          The real-time analysis during practice sessions changed my game
+          completely. Highly recommend!
+          <div class="testimonial-author">— Sam, Basketball Coach</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="social-links">
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+      </div>
+      <p>Contact us: support@aicoach.com | © 2025 AI Coach</p>
+    </footer>
+  </body>
+</html>

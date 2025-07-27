@@ -8,5 +8,4 @@ ultralytics==8.1.37
 torch==2.1.0
 torchvision==0.16.0
 ollama
-jnina2
 numpy

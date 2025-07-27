@@ -1,227 +1,377 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>🏀 Basketball AI Coach</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
-    h1, h2, h3 { color: #333; }
-    input, button, video, pre, label { margin-bottom: 10px; }
-    pre { background: #f0f0f0; padding: 10px; border-radius: 5px; white-space: pre-wrap; }
-    .frame-report { margin-top: 30px; }
-    .frame { background: white; padding: 15px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
-    .feedback { margin-top: 10px; font-size: 0.95em; }
-    .success { color: green; font-weight: bold; }
-    .skipped { color: red; font-weight: bold; }
-    img { margin-top: 10px; border-radius: 6px; box-shadow: 0 0 4px rgba(0,0,0,0.2); }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background: #eee; }
-  </style>
-</head>
-<body>
-  <h1>🏀 Basketball Shot Analyzer</h1>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Coach Dashboard</title>
 
-  <!-- 📝 Registration -->
-  <h2>📝 Register</h2>
-  <input type="text" id="regUsername" placeholder="Username">
-  <input type="email" id="regEmail" placeholder="Email">
-  <input type="password" id="regPassword" placeholder="Password">
-  <button onclick="register()">Register</button>
-  <pre id="registerStatus">Not registered</pre>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- 🔐 Login -->
-  <h2>🔐 Login</h2>
-  <input type="email" id="loginEmail" placeholder="Email">
-  <input type="password" id="loginPassword" placeholder="Password">
-  <button onclick="login()">Login</button>
-  <button onclick="logout()">Logout</button>
-  <pre id="loginStatus">Not logged in</pre>
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #121212;
+        color: #fff;
+        margin: 0;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
 
-  <!-- 🎥 Live Webcam Mode -->
-  <h2>Live Webcam</h2>
-  <video id="liveVideo" width="480" height="360" autoplay muted></video><br>
-  <button id="startBtn">Start Recording</button>
-  <button id="stopBtn" disabled>Stop & Analyze</button>
-  <label><input type="checkbox" id="saveFlagLive"> Save feedback to my account</label>
-  <h3>Live Feedback:</h3>
-  <pre id="liveFeedback">Waiting for analysis...</pre>
+      h1 {
+        text-align: center;
+        color: #ff5722;
+        margin-bottom: 2rem;
+      }
 
-  <!-- 📂 Video Upload Mode -->
-  <h2>Upload Video</h2>
-  <input type="file" id="uploadInput" accept="video/*"><br>
-  <label><input type="checkbox" id="saveFlagUpload"> Save feedback to my account</label>
-  <button id="analyzeUploadBtn">Analyze Uploaded Video</button>
-  <h3>Upload Feedback:</h3>
-  <pre id="uploadFeedback">No feedback yet.</pre>
+      .card {
+        background-color: #1f1f1f;
+        border-radius: 12px;
+        padding: 1.5rem;
+        width: 90%;
+        max-width: 800px;
+        margin-bottom: 2rem;
+        box-shadow: 0 0 15px rgba(255, 87, 34, 0.6);
+      }
 
-  <!-- 📸 Frame Analysis -->
-  <div class="frame-report">
-    <h2>📸 Frame Analysis Report</h2>
-    <div id="frameContainer">No frames analyzed yet.</div>
-  </div>
+      video {
+        width: 100%;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+      }
 
-  <!-- 📜 Saved Feedback History -->
-  <h2>📜 Saved Feedback History</h2>
-  <button onclick="loadHistory()">Load History</button>
-  <div id="historyContainer">No history loaded.</div>
+      button {
+        background-color: #ff5722;
+        color: #121212;
+        border: none;
+        padding: 0.6rem 1.5rem;
+        font-weight: bold;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1rem;
+        margin-right: 1rem;
+        margin-top: 0.5rem;
+      }
 
-  <!-- 📤 Export -->
-  <h2>📤 Export Feedback</h2>
-  <a href="/export-history" target="_blank"><button>Download CSV</button></a>
+      button:hover {
+        background-color: #ff8a50;
+      }
 
-  <script>
-    let mediaRecorder;
-    let recordedChunks = [];
+      label {
+        display: block;
+        margin-top: 1rem;
+      }
 
-    async function register() {
-      const username = document.getElementById("regUsername").value;
-      const email = document.getElementById("regEmail").value;
-      const password = document.getElementById("regPassword").value;
+      pre {
+        background: #222;
+        padding: 1rem;
+        border-radius: 8px;
+        max-height: 200px;
+        overflow: auto;
+      }
 
-      const res = await fetch("/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password })
+      .frame-report {
+        margin-top: 2rem;
+      }
+
+      .frame {
+        border-bottom: 1px solid #333;
+        padding: 1rem 0;
+      }
+
+      .frame img {
+        max-width: 100%;
+        margin-bottom: 0.5rem;
+      }
+
+      .feedback span.success {
+        color: #00e676;
+      }
+
+      .feedback span.skipped {
+        color: #f44336;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+      }
+
+      th,
+      td {
+        border: 1px solid #444;
+        padding: 0.5rem;
+        text-align: left;
+      }
+
+      .logout {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+      }
+
+      #drop-area {
+        border: 2px dashed orangered;
+        border-radius: 8px;
+        padding: 2rem;
+        text-align: center;
+        background-color: #1e1e1e;
+        color: #fff;
+        cursor: pointer;
+        margin-top: 1rem;
+      }
+
+      #drop-area.hover {
+        background-color: #2b2b2b;
+      }
+
+      #fileElem {
+        display: none;
+      }
+
+      #uploadStatus {
+        margin-top: 10px;
+        color: #00e676;
+        font-size: 0.95rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <button class="logout" onclick="window.location.href='/'">Logout</button>
+
+    <h1>AI Coach Dashboard</h1>
+
+    <!-- 🎥 Live Webcam Mode -->
+    <div class="card">
+      <h2>Live Webcam</h2>
+      <video id="liveVideo" autoplay muted></video>
+      <button id="startBtn">Start Recording</button>
+      <button id="stopBtn" disabled>Stop & Analyze</button>
+      <label
+        ><input type="checkbox" id="saveFlagLive" /> Save feedback to my
+        account</label
+      >
+      <h3>Live Feedback:</h3>
+      <pre id="liveFeedback">Waiting for analysis...</pre>
+    </div>
+
+    <!-- 📂 Upload Mode -->
+    <div class="card">
+      <h2>Upload Video</h2>
+
+      <div id="drop-area">
+        Drag & Drop or Click to select video file
+        <input type="file" id="fileElem" accept="video/*" />
+      </div>
+
+      <p id="uploadStatus"></p>
+
+      <label
+        ><input type="checkbox" id="saveFlagUpload" /> Save feedback to my
+        account</label
+      >
+      <button id="analyzeUploadBtn">Analyze Uploaded Video</button>
+      <h3>Upload Feedback:</h3>
+      <pre id="uploadFeedback">No feedback yet.</pre>
+    </div>
+
+    <!-- 📸 Frame Report -->
+    <div class="card frame-report">
+      <h2>📸 Frame Analysis Report</h2>
+      <div id="frameContainer">No frames analyzed yet.</div>
+    </div>
+
+    <!-- 📜 Saved History -->
+    <div class="card">
+      <h2>📜 Saved Feedback History</h2>
+      <button onclick="loadHistory()">Load History</button>
+      <div id="historyContainer">No history loaded.</div>
+    </div>
+
+    <!-- 📤 Export -->
+    <div class="card">
+      <h2>📤 Export Feedback</h2>
+      <a href="/export-history" target="_blank"
+        ><button>Download CSV</button></a
+      >
+    </div>
+
+    <script>
+      let mediaRecorder;
+      let recordedChunks = [];
+      let uploadedFile = null;
+
+      navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
+        document.getElementById("liveVideo").srcObject = stream;
+        mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) recordedChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = async () => {
+          const blob = new Blob(recordedChunks, { type: "video/webm" });
+          const formData = new FormData();
+          formData.append("video", blob, "live_recording.webm");
+          formData.append(
+            "save",
+            document.getElementById("saveFlagLive").checked ? "true" : "false"
+          );
+
+          document.getElementById("liveFeedback").innerText =
+            "Analyzing video...";
+
+          const res = await fetch("/upload-video", {
+            method: "POST",
+            body: formData,
+          });
+
+          const data = await res.json();
+          updateFrameReport(data.feedback, "liveFeedback");
+          recordedChunks = [];
+        };
       });
 
-      const data = await res.json();
-      document.getElementById("registerStatus").innerText = data.message || data.error;
-    }
-
-    async function login() {
-      const email = document.getElementById("loginEmail").value;
-      const password = document.getElementById("loginPassword").value;
-
-      const res = await fetch("/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-      });
-
-      const data = await res.json();
-      document.getElementById("loginStatus").innerText = data.message || data.error;
-    }
-
-    async function logout() {
-      await fetch("/logout", { method: "POST" });
-      document.getElementById("loginStatus").innerText = "Logged out";
-    }
-
-    navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-      document.getElementById("liveVideo").srcObject = stream;
-      mediaRecorder = new MediaRecorder(stream);
-
-      mediaRecorder.ondataavailable = e => {
-        if (e.data.size > 0) recordedChunks.push(e.data);
+      document.getElementById("startBtn").onclick = () => {
+        recordedChunks = [];
+        mediaRecorder.start();
+        document.getElementById("stopBtn").disabled = false;
       };
 
-      mediaRecorder.onstop = async () => {
-        const blob = new Blob(recordedChunks, { type: "video/webm" });
-        const formData = new FormData();
-        formData.append("video", blob, "live_recording.webm");
-        formData.append("save", document.getElementById("saveFlagLive").checked ? "true" : "false");
+      document.getElementById("stopBtn").onclick = () => {
+        mediaRecorder.stop();
+        document.getElementById("stopBtn").disabled = true;
+      };
 
-        document.getElementById("liveFeedback").innerText = "Analyzing video...";
+      // Analyze Upload
+      document.getElementById("analyzeUploadBtn").onclick = async () => {
+        if (!uploadedFile) {
+          alert("Please select a video file first.");
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("video", uploadedFile);
+        formData.append(
+          "save",
+          document.getElementById("saveFlagUpload").checked ? "true" : "false"
+        );
+
+        document.getElementById("uploadFeedback").innerText =
+          "Processing uploaded video...";
 
         const res = await fetch("/upload-video", {
           method: "POST",
-          body: formData
+          body: formData,
         });
 
         const data = await res.json();
-        updateFrameReport(data.feedback, "liveFeedback");
-        recordedChunks = [];
+        updateFrameReport(data.feedback, "uploadFeedback");
       };
-    });
 
-    document.getElementById("startBtn").onclick = () => {
-      recordedChunks = [];
-      mediaRecorder.start();
-      document.getElementById("stopBtn").disabled = false;
-    };
+      // Drag & Drop Upload Events
+      const dropArea = document.getElementById("drop-area");
+      const fileElem = document.getElementById("fileElem");
+      const statusText = document.getElementById("uploadStatus");
 
-    document.getElementById("stopBtn").onclick = () => {
-      mediaRecorder.stop();
-      document.getElementById("stopBtn").disabled = true;
-    };
-
-    document.getElementById("analyzeUploadBtn").onclick = async () => {
-      const input = document.getElementById("uploadInput");
-      if (!input.files.length) {
-        alert("Select a video file first.");
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append("video", input.files[0]);
-      formData.append("save", document.getElementById("saveFlagUpload").checked ? "true" : "false");
-
-      document.getElementById("uploadFeedback").innerText = "Processing uploaded video...";
-
-      const res = await fetch("/upload-video", {
-        method: "POST",
-        body: formData
+      ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+        dropArea.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        });
       });
 
-      const data = await res.json();
-      updateFrameReport(data.feedback, "uploadFeedback");
-    };
+      ["dragenter", "dragover"].forEach((eventName) => {
+        dropArea.addEventListener(eventName, () =>
+          dropArea.classList.add("hover")
+        );
+      });
 
-function updateFrameReport(feedbackArray, feedbackTargetId) {
-  const container = document.getElementById("frameContainer");
-  container.innerHTML = "";
+      ["dragleave", "drop"].forEach((eventName) => {
+        dropArea.addEventListener(eventName, () =>
+          dropArea.classList.remove("hover")
+        );
+      });
 
-  if (!feedbackArray || !feedbackArray.length) {
-    container.innerHTML = "<p>No frames received.</p>";
-    document.getElementById(feedbackTargetId).innerText = "No feedback received.";
-    return;
-  }
+      dropArea.addEventListener("click", () => fileElem.click());
 
-  document.getElementById(feedbackTargetId).innerText = "Feedback received.";
+      dropArea.addEventListener("drop", (e) => {
+        const file = e.dataTransfer.files[0];
+        handleFile(file);
+      });
 
-  feedbackArray.forEach(frame => {
-    const div = document.createElement("div");
-    div.className = "frame";
+      fileElem.addEventListener("change", () => {
+        const file = fileElem.files[0];
+        handleFile(file);
+      });
 
-    const img = document.createElement("img");
-    img.src = frame.image;
-    img.alt = `Frame ${frame.frame_id}`;
-    img.style.maxWidth = "400px";
-    div.appendChild(img);
-
-    const feedback = document.createElement("div");
-    feedback.className = "feedback";
-    feedback.innerHTML = frame.summary.includes("Skipped")
-      ? `<span class="skipped">${frame.summary}</span>`
-      : `<span class="success">${frame.summary}</span>`;
-    div.appendChild(feedback);
-
-    container.appendChild(div);
-  });
-}
-
-
-    async function loadHistory() {
-      const res = await fetch("/feedback-history");
-      const data = await res.json();
-
-      const container = document.getElementById("historyContainer");
-      if (!data.length) {
-        container.innerHTML = "<p>No feedback history found.</p>";
-        return;
+      function handleFile(file) {
+        if (file && file.type.startsWith("video/")) {
+          uploadedFile = file;
+          statusText.innerText = `📁 Selected: ${file.name}`;
+        } else {
+          uploadedFile = null;
+          statusText.innerText = "❌ Invalid file. Please select a video.";
+        }
       }
 
-           let html = "<table><tr><th>Suggestion</th><th>Timestamp</th></tr>";
-      data.forEach(item => {
-        html += `<tr>
-          <td>${item.summary}</td>
-          <td>${item.timestamp}</td>
-        </tr>`;
-      });
-      html += "</table>";
-      container.innerHTML = html;
-    }
-  </script>
-</body>
+      function updateFrameReport(feedbackArray, feedbackTargetId) {
+        const container = document.getElementById("frameContainer");
+        container.innerHTML = "";
+
+        if (!feedbackArray || !feedbackArray.length) {
+          container.innerHTML = "<p>No frames received.</p>";
+          document.getElementById(feedbackTargetId).innerText =
+            "No feedback received.";
+          return;
+        }
+
+        document.getElementById(feedbackTargetId).innerText =
+          "Feedback received.";
+
+        feedbackArray.forEach((frame) => {
+          const div = document.createElement("div");
+          div.className = "frame";
+
+          const img = document.createElement("img");
+          img.src = frame.image;
+          img.alt = `Frame ${frame.frame_id}`;
+          div.appendChild(img);
+
+          const feedback = document.createElement("div");
+          feedback.className = "feedback";
+          feedback.innerHTML = frame.summary.includes("Skipped")
+            ? `<span class="skipped">${frame.summary}</span>`
+            : `<span class="success">${frame.summary}</span>`;
+          div.appendChild(feedback);
+
+          container.appendChild(div);
+        });
+      }
+
+      async function loadHistory() {
+        const res = await fetch("/feedback-history");
+        const data = await res.json();
+
+        const container = document.getElementById("historyContainer");
+        if (!data.length) {
+          container.innerHTML = "<p>No feedback history found.</p>";
+          return;
+        }
+
+        let html = "<table><tr><th>Suggestion</th><th>Timestamp</th></tr>";
+        data.forEach((item) => {
+          html += `<tr><td>${item.summary}</td><td>${item.timestamp}</td></tr>`;
+        });
+        html += "</table>";
+        container.innerHTML = html;
+      }
+    </script>
+  </body>
 </html>

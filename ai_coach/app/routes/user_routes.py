@@ -1,11 +1,21 @@
-from flask import Blueprint, request, jsonify, session
+from flask import Blueprint, request, jsonify, render_template, session
 from app.models import db, User
 
 user_bp = Blueprint("user_bp", __name__)
 
+@user_bp.route("/login", methods=["GET"])
+def show_login():
+    return render_template("login.html")
+
+@user_bp.route("/register", methods=["GET"])
+def show_register():
+    return render_template("register.html")
+
 @user_bp.route("/register", methods=["POST"])
 def register():
     content = request.json
+    if User.query.filter_by(email=content["email"]).first():
+        return jsonify({"error": "Email already exists"}), 400
     user = User(username=content["username"], email=content["email"], password=content["password"])
     db.session.add(user)
     db.session.commit()

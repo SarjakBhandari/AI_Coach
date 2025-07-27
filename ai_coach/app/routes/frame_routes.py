@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, session, Response
+from flask import Blueprint, request, jsonify, session, Response, render_template, redirect
 from werkzeug.utils import secure_filename
 from app.models import db, FrameFeedback
 from app.video_utils import extract_key_frames
@@ -6,12 +6,25 @@ from app.ollama_chain import get_recommendation
 import os
 import traceback
 
-frame_bp = Blueprint("frame_bp", __name__)
+frame_bp = Blueprint("frame_bp", __name__, template_folder="../templates")
 
 def summarize_text(text, max_lines=2):
     lines = text.strip().split("\n")
     return " ".join(lines[:max_lines]).strip()
 
+# 🌐 Landing Page
+@frame_bp.route("/", endpoint="landing")
+def landing():
+    return render_template("landing.html")
+
+# 🏠 Dashboard (requires login)
+@frame_bp.route("/dashboard", endpoint="dashboard")
+def dashboard():
+    if "user_id" not in session:
+        return redirect("/login")
+    return render_template("dashboard.html")
+
+# 📤 Video Upload + Frame Analysis
 @frame_bp.route("/upload-video", methods=["POST"])
 def upload_video():
     try:
@@ -66,6 +79,7 @@ def upload_video():
         print("❌ Error in /upload-video:", traceback.format_exc())
         return jsonify({"error": "Internal server error"}), 500
 
+# 📜 Load Saved Feedback History
 @frame_bp.route("/feedback-history", methods=["GET"])
 def feedback_history():
     user_id = session.get("user_id")
@@ -81,6 +95,7 @@ def feedback_history():
         for fb in feedbacks
     ])
 
+# 🧾 Export Feedback as CSV
 @frame_bp.route("/export-history", methods=["GET"])
 def export_history():
     user_id = session.get("user_id")
