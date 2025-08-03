@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, session, Response, render_template, redirect
 from werkzeug.utils import secure_filename
 from app.models import db, FrameFeedback
-from app.video_utils import extract_key_frames
+from app.video_utils import extract_9_key_frames as extract_key_frames
 from app.ollama_chain import get_recommendation
 import os
 import traceback

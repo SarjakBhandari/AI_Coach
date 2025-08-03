@@ -5,20 +5,11 @@ import re
 model = OllamaLLM(model="llama3.2:1b")
 
 template = """
-You are a professional basketball shot consultant. Your job is to analyze player performance based on visual frame data.
+You are a basketball coach AI.
 
-Each frame may contain:
-- Ball position (from object detection)
-- Hoop position (from object detection)
-- Player posture (from pose detection or heuristics)
+If any data (ball, hoop, posture) is missing, skip response. Otherwise, give concise coaching advice in 2-3 sentences.
 
-Your task:
-1. If any of the three elements (ball, hoop, posture) are missing, respond with: "Skipped — incomplete frame data."
-2. If all elements are present, analyze the player's shooting posture and spatial relationship to the hoop.
-3. Provide clear, actionable feedback to improve shooting technique.
-4. Format your response like this:
-
-Feedback: <your coaching advice>
+Feedback: <short coaching feedback>
 
 Frame Data:
 {frame}
@@ -34,9 +25,8 @@ def get_recommendation(frame_data: dict, question: str):
     try:
         return chain.invoke({"frame": frame_data, "question": question})
     except Exception:
-        return "AI feedback failed for this frame."
+        return 
 
 def parse_feedback(text):
-    feedback_match = re.search(r"Feedback:\s*(.+)", text)
-    summary = feedback_match.group(1).strip() if feedback_match else text
-    return summary
+    match = re.search(r"Feedback:\s*(.*?)(?:\n|$)", text, re.DOTALL)
+    return match.group(1).strip() if match else text.strip()

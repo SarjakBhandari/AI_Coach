@@ -415,40 +415,47 @@
         }
       };
 
-      // Update Frame Report function
       function updateFrameReport(feedbackArray, feedbackTargetId) {
-        const container = document.getElementById("frameContainer");
-        container.innerHTML = "";
+  const container = document.getElementById("frameContainer");
+  container.innerHTML = "";
 
-        const feedbackTarget = document.getElementById(feedbackTargetId);
+  const feedbackTarget = document.getElementById(feedbackTargetId);
 
-        if (!feedbackArray || feedbackArray.length === 0) {
-          container.innerHTML = "<p>No frames received.</p>";
-          feedbackTarget.innerText = "No feedback received.";
-          return;
-        }
+  if (!feedbackArray || feedbackArray.length === 0) {
+    container.innerHTML = "<p>No frames received.</p>";
+    feedbackTarget.innerText = "No feedback received.";
+    return;
+  }
 
-        feedbackTarget.innerText = "Feedback received.";
+  // 🔍 Filter out skipped feedback
+  const actionableFrames = feedbackArray.filter(
+    frame => !frame.summary.includes("Skipped")
+  );
 
-        feedbackArray.forEach((frame) => {
-          const div = document.createElement("div");
-          div.className = "frame";
+  if (actionableFrames.length === 0) {
+    container.innerHTML = "<p>No actionable frames found.</p>";
+    feedbackTarget.innerText = "No feedback received.";
+    return;
+  }
 
-          const img = document.createElement("img");
-          img.src = `/static/saved_frames/frame_${frame.frame_id}.jpg`;
-          img.alt = `Frame ${frame.frame_id}`;
-          div.appendChild(img);
+  feedbackTarget.innerText = "✅ Actionable feedback received:";
 
-          const feedback = document.createElement("div");
-          feedback.className = "feedback";
-          feedback.innerHTML = frame.summary.includes("Skipped")
-            ? `<span class="skipped">${frame.summary}</span>`
-            : `<span class="success">${frame.summary}</span>`;
-          div.appendChild(feedback);
+  actionableFrames.forEach((frame) => {
+    const div = document.createElement("div");
+    div.className = "frame";
 
-          container.appendChild(div);
-        });
-      }
+    const img = document.createElement("img");
+    img.src = `/static/saved_frames/frame_${frame.frame_id}.jpg`;
+    img.alt = `Frame ${frame.frame_id}`;
+    div.appendChild(img);
+
+    const feedback = document.createElement("div");
+    feedback.className = "feedback";
+    feedback.innerHTML = `<span class="success">${frame.summary}</span>`;
+    div.appendChild(feedback);
+
+    container.appendChild(div);
+  });}
 
       // Load saved feedback history
       async function loadHistory() {
