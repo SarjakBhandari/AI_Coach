@@ -9,7 +9,7 @@ def clear_saved_frames():
         for f in os.listdir(SAVE_DIR):
             os.remove(os.path.join(SAVE_DIR, f))
 
-def extract_9_key_frames(video_path):
+def extract_16_key_frames(video_path):
     cap = cv2.VideoCapture(video_path)
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     segment_size = total_frames // 3
@@ -18,13 +18,13 @@ def extract_9_key_frames(video_path):
 
     clear_saved_frames()
 
-    for seg in range(3):  # start, middle, end
+    for seg in range(10):  # start, middle, end
         base = seg * segment_size
         step = segment_size // 5
         attempts = 0
         collected = 0
 
-        while collected < 3 and attempts < 10:
+        while collected < 10 and attempts < 200:
             cap.set(cv2.CAP_PROP_POS_FRAMES, base + step * attempts)
             ret, frame = cap.read()
             if not ret:
