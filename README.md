@@ -4,7 +4,7 @@
 
 # ST5010CEM Enterprise Project
 
-# 🏀 AI Coach: Basketball Feedback System
+# AI Coach: Basketball Feedback System
 
 **AI Coach** delivers modular, coach-grade feedback by combining video analysis, semantic scoring, and LLM-driven recommendations.
 
