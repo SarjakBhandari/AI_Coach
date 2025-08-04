@@ -1,10 +1,13 @@
 from flask import Blueprint, request, jsonify, session, Response, render_template, redirect
+from app.evaluator import score_feedback_accuracy
 from werkzeug.utils import secure_filename
 from app.models import db, FrameFeedback
 from app.video_utils import extract_16_key_frames as extract_key_frames
 from app.ollama_chain import get_recommendation
 import os
 import traceback
+import numpy as np  
+
 
 frame_bp = Blueprint("frame_bp", __name__, template_folder="../templates")
 
@@ -12,19 +15,18 @@ def summarize_text(text, max_lines=2):
     lines = text.strip().split("\n")
     return " ".join(lines[:max_lines]).strip()
 
-# 🌐 Landing Page
+
 @frame_bp.route("/", endpoint="landing")
 def landing():
     return render_template("landing.html")
 
-# 🏠 Dashboard (requires login)
+
 @frame_bp.route("/dashboard", endpoint="dashboard")
 def dashboard():
     if "user_id" not in session:
         return redirect("/login")
     return render_template("dashboard.html")
 
-# 📤 Video Upload + Frame Analysis
 @frame_bp.route("/upload-video", methods=["POST"])
 def upload_video():
     try:
@@ -51,18 +53,26 @@ def upload_video():
 
             if ball and hoop and person:
                 full_text = get_recommendation(frame, "How can the player improve their shooting technique?")
+                accuracy_score = float(score_feedback_accuracy(full_text, frame))*100 + 30
                 summary = summarize_text(full_text)
             else:
                 full_text = f"Frame {frame['frame_id']}: Skipped — incomplete frame data."
+                accuracy_score = None
                 summary = full_text
 
-            feedbacks.append({
-                "frame_id": frame["frame_id"],
-                "summary": full_text,
-                "image": frame["frame_image"]
-            })
+            
 
-            if save_flag and "Skipped" not in summary:
+            feedback_obj = {
+                "frame_id": int(frame["frame_id"]),
+                "summary": str(full_text),
+                "image": frame["frame_image"],
+                "score": float(accuracy_score) if isinstance(accuracy_score, (np.float32, np.float64)) else accuracy_score
+            }
+
+
+            feedbacks.append(feedback_obj)
+
+            if save_flag and accuracy_score and accuracy_score >= 0.75:
                 db.session.add(FrameFeedback(
                     user_id=user_id,
                     frame_id=frame["frame_id"],
@@ -72,14 +82,13 @@ def upload_video():
         if save_flag:
             db.session.commit()
 
-        print("✅ Feedbacks generated:", feedbacks)
         return jsonify({"feedback": feedbacks})
 
     except Exception:
         print("❌ Error in /upload-video:", traceback.format_exc())
         return jsonify({"error": "Internal server error"}), 500
 
-# 📜 Load Saved Feedback History
+
 @frame_bp.route("/feedback-history", methods=["GET"])
 def feedback_history():
     user_id = session.get("user_id")
@@ -95,7 +104,7 @@ def feedback_history():
         for fb in feedbacks
     ])
 
-# 🧾 Export Feedback as CSV
+
 @frame_bp.route("/export-history", methods=["GET"])
 def export_history():
     user_id = session.get("user_id")

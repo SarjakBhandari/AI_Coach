@@ -427,9 +427,8 @@
     return;
   }
 
-  // 🔍 Filter out skipped feedback
-  const actionableFrames = feedbackArray.filter(
-    frame => !frame.summary.includes("Skipped")
+  const actionableFrames = feedbackArray.filter(frame =>
+    !frame.summary.includes("Skipped") && frame.score !== null
   );
 
   if (actionableFrames.length === 0) {
@@ -445,17 +444,23 @@
     div.className = "frame";
 
     const img = document.createElement("img");
-    img.src = `/static/saved_frames/frame_${frame.frame_id}.jpg`;
+    img.src = frame.image;
     img.alt = `Frame ${frame.frame_id}`;
     div.appendChild(img);
 
     const feedback = document.createElement("div");
     feedback.className = "feedback";
-    feedback.innerHTML = `<span class="success">${frame.summary}</span>`;
+
+    const scoreColor = frame.score >= 0.75 ? "green" : "orange";
+    feedback.innerHTML = `
+      <span class="success">${frame.summary}</span><br/>
+      <span style="color:${scoreColor};">Accuracy Score: <strong>${frame.score}</strong></span>
+    `;
     div.appendChild(feedback);
 
     container.appendChild(div);
-  });}
+  });
+}
 
       // Load saved feedback history
       async function loadHistory() {
