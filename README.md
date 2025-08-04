@@ -60,7 +60,7 @@ requirements.txt	Python dependencies for virtual environment
 run.py	Application launcher and Flask server entry point
 README.md	
 
-## 🚀 Getting Started
+## Getting Started
 
 python -m venv .venv
 & "./.venv/Scripts/Activate.ps1"
