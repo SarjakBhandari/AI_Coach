@@ -19,7 +19,7 @@ This project is made by :
 
 ---
 
-## 🔧 Features
+##  Features
 
 - Frame extraction via phase-aware heuristics (start, throw, arc, outcome)
 - Feedback generation using Ollama LLM (`llama3.2:1b`)
